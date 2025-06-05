@@ -1,0 +1,142 @@
+/* General Reset */
+.container {
+    padding-bottom: 3%;
+}
+
+body, h1, h2, h3, p, ul, li, a, button {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body Style */
+.container {
+    padding-top: 1%;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+/* Anchor Tag Styling */
+a {
+    color: inherit; /* Inherit the text color from the parent element */
+    text-decoration: none; /* Remove underline */
+    cursor: pointer; /* Keep the pointer cursor */
+}
+
+/* Header Styling */
+header {
+    display: flex;
+    justify-content: space-between;
+    position: fixed;
+    top: 0;
+    left: 0;
+    align-items: center;
+    padding: 1.5rem 2rem;
+    color: #fff;
+    background: #4b48ff;
+    width: 100%;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1); /* Light shadow */
+    z-index: 1000;
+}
+
+header .logo {
+    font-size: 1.6rem;
+    font-weight: bold;
+}
+
+header nav ul {
+    display: flex;
+    list-style: none;
+}
+
+header nav ul li {
+    margin-left: 2rem;
+}
+
+header nav ul li a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 1rem;
+    transition: color 0.3s ease;
+}
+
+header nav ul li a:hover {
+    color: #ffd700; /* Hover color change */
+}
+
+/* Tools Section Styling */
+.tools {
+    padding: 0rem 2rem;
+    padding-top: 4%;
+    text-align: center;
+    margin-top: 0px; /* Adjusted margin-top to account for header */
+}
+
+.tools h2 {
+    margin-top: 2%;
+    margin-bottom: 1.5rem;
+    font-size: 2rem;
+    font-weight: 600;
+    color: #333;
+}
+
+/* Tool Grid Layout */
+.tool-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+}
+
+.tool-card {
+    background: #fff;
+    padding: 2rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.tool-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.tool-card h3 {
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #333;
+}
+
+.tool-card p {
+    color: #666;
+    font-size: 0.95rem;
+}
+
+/* Hover Effects */
+.tool-grid a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.tool-grid a:hover .tool-card {
+    transform: translateY(-5px);
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .tool-grid {
+        grid-template-columns: repeat(2, minmax(200px, 1fr));
+    }
+}
+
+@media (max-width: 576px) {
+    .tool-grid {
+        grid-template-columns: 1fr;
+    }
+}

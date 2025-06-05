@@ -1,0 +1,82 @@
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid d-flex">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <a class="navbar-brand" href="/"><b>PDFTools</b></a>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item"><a class="nav-link active" href="/alltools">ALL TOOLS</a></li>
+                <li class="nav-item"><a class="nav-link active" href="/compress-pdf">COMPRESS PDF</a></li>
+                <li class="nav-item"><a class="nav-link active" href="/split">SPLIT PDF</a></li>
+                <li class="nav-item"><a class="nav-link active" href="/merge">MERGE PDF</a></li>
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle text-black" href="#" role="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">CONVERT PDF</a>
+                    <ul class="dropdown-menu">
+                        <% let convertLinks=[ { name: "PDF-TO-WORD" , link: "/pdf-to-word" }, { name: "WORD-TO-PDF" ,
+                            link: "/word-to-pdf" }, {
+                            name: "PPT-TO-PDF" , link: "/powerpoint-to-pdf" }, { name: "PDF-TO-EXCEL" ,
+                            link: "/pdf-to-excel" }, { name: "EXCEL-TO-PDF" , link: "/excel-to-pdf" }, {
+                            name: "PDF-TO-IMAGE" , link: "/pdf-to-images" }, { name: "IMAGE-TO-PDF" ,
+                            link: "/image-to-pdf" } ]; %>
+
+                            <% convertLinks.forEach((item, index)=> { %>
+                                <li><a class="dropdown-item" href="<%= item.link %>">
+                                        <%= item.name %>
+                                    </a></li>
+                                <% if (index!==convertLinks.length - 1) { %>
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                    <% } %>
+                                        <% }); %>
+                    </ul>
+                </li>
+            </ul>
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <% if (user) { %>
+                  <div class="name-placeholder"
+                       style="width: 40px; height: 40px; border-radius: 50%; background-color: #f0f0f0; 
+                              font-weight: bold; font-size: 20px; color: #333; text-transform: uppercase;
+                              display: flex; align-items: center; justify-content: center;">
+                    <%= user.username.charAt(0).toUpperCase() %>
+                  </div>
+                  <span style="font-weight: bold; font-size: 16px; color: #333;">
+                    <%= user.username.charAt(0).toUpperCase() + user.username.slice(1).toLowerCase() %>
+                  </span>
+                  
+                  <!-- Conditionally render the Dashboard button for admin -->
+                  <% if (user.role === 'admin') { %>
+                    <a href="/admin/dashboard" 
+                       style="padding: 8px 12px; background-color: #FF9800; color: white; border-radius: 5px; 
+                              text-decoration: none;">
+                      Dashboard
+                    </a>
+                  <% } %>
+
+                  <a href="/auth/logout"
+                     style="padding: 8px 12px; background-color: #e74c3c; color: white; border: none; 
+                            border-radius: 5px; text-decoration: none;">
+                    Logout
+                  </a>
+                <% } else { %>
+                  <a href="/auth/login"
+                     style="padding: 8px 12px; background-color: #2196F3; color: white; border-radius: 5px; 
+                            text-decoration: none;">
+                    Login
+                  </a>
+                  <a href="/auth/register"
+                     style="padding: 8px 12px; background-color: #4CAF50; color: white; border-radius: 5px; 
+                            text-decoration: none;">
+                    Register
+                  </a>
+                <% } %>
+              </div>
+        </div>
+    </div>
+</nav>
+<!-- 
+ -->

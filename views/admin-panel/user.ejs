@@ -1,0 +1,55 @@
+<%- include('../admin-panel/component/header') %>
+<%- include('../admin-panel/component/sidebar') %>
+
+<div class="content-area p-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h4>User List</h4>
+    <button class="btn btn-primary btn-sm">+ Add User</button>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table table-bordered table-hover">
+      <thead class="table-dark">
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Status</th>
+          <th>Created At</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% users.forEach(user => { %>
+          <tr>
+            <td><%= user._id %></td>
+            <td><%= user.fullName        %></td>
+            <td><%= user.email %></td>
+            <td>
+              <% if(user.status === 'active') { %>
+                <span class="badge bg-success">Active</span>
+              <% } else { %>
+                <span class="badge bg-secondary">Inactive</span>
+              <% } %>
+            </td>
+            <td><%= new Date(user.createdAt).toLocaleDateString() %></td>
+            <td>
+              <form action="/admin/users/delete/<%= user._id %>" method="POST" onsubmit="return confirm('Are you sure you want to delete this user?');">
+                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+              </form>           
+             </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<style>
+    .content-area {
+  margin-left: 250px;
+  width: calc(100% - 250px);
+  background-color: #ffffff;
+  min-height: 100vh;
+}
+</style>

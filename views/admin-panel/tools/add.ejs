@@ -1,0 +1,56 @@
+<!-- Modal -->
+<div class="modal fade" id="toolModal" tabindex="-1" aria-labelledby="toolModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <form method="POST" action="">
+        <div class="modal-header">
+          <h5 class="modal-title fw-bold" id="toolModalLabel">Add / Edit Tool</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body">
+          <!-- Form Body -->
+          <div class="mb-3">
+            <label class="form-label">Tool Name</label>
+            <input type="text" name="name" class="form-control" value="<%= tool ? tool.name : '' %>" required>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Tool ID</label>
+            <input type="text" name="id" class="form-control" value="<%= tool ? tool.id : '' %>" required>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">FontAwesome Icon</label>
+            <input type="text" name="icon" class="form-control" value="<%= tool ? tool.icon : '' %>">
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Color Class</label>
+            <input type="text" name="color" class="form-control" value="<%= tool ? tool.color : '' %>">
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Description</label>
+            <textarea name="description" rows="3" class="form-control"><%= tool ? tool.description : '' %></textarea>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Tool Link</label>
+            <input type="text" name="link" class="form-control" value="<%= tool ? tool.link : '' %>">
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Category</label>
+            <input type="text" name="category" class="form-control" value="<%= tool ? tool.category : '' %>">
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary">💾 Save Tool</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,42 @@
+<div class="sidebar bg-dark text-white p-3 vh-100">
+    <h4 class="mb-4">Admin Panel</h4>
+    <ul class="nav flex-column">
+      <li class="nav-item"><a href="/" class="nav-link text-white">View Site</a></li>
+      <li class="nav-item"><a href="/admin/dashboard" class="nav-link text-white">Dashboard</a></li>
+      <li class="nav-item"><a href="/admin/users" class="nav-link text-white">Users</a></li>
+      <li class="nav-item"><a href="/admin/tools" class="nav-link text-white">All Tools</a></li>
+      <li class="nav-item"><a href="/admin/contents" class="nav-link text-white">Content</a></li>
+      <li class="nav-item"><a href="/admin/security" class="nav-link text-white">Security</a></li>
+    </ul>
+    <div class="auth-section" style="position: absolute; bottom: 20px; left: 20px; right: 20px;">
+      
+      <% if (user) { %>
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <div class="name-placeholder"
+               style="width: 40px; height: 40px; border-radius: 50%; background-color: #f0f0f0; 
+                      font-weight: bold; font-size: 20px; color: #333; text-transform: uppercase;
+                      display: flex; align-items: center; justify-content: center;">
+            <%= user.username.charAt(0).toUpperCase() %>
+          </div>
+          <span style="font-weight: bold; font-size: 16px; color: #ffffff;">
+            <%= user.username.charAt(0).toUpperCase() + user.username.slice(1).toLowerCase() %>
+          </span>
+          <a href="/auth/logout"
+             style="padding: 8px 12px; background-color: #e74c3c; color: white; border: none; 
+                    border-radius: 5px; text-decoration: none;">
+            Logout
+          </a>
+        </div>
+      <% } %>
+      
+    </div>
+  </div>
+
+ <style>
+ .sidebar {
+    width: 250px;
+    position: fixed;
+    top: 0;
+    left: 0;
+  }
+  </style>

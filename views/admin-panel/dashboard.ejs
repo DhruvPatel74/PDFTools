@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    .content-area {
+  margin-left: 250px;
+  width: calc(100% - 250px);
+  background-color: #ffffff;
+  min-height: 100vh;
+}
+    body {
+      font-family: Arial, sans-serif;
+      padding: 2rem;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 3rem;
+    }
+    table, th, td {
+      border: 1px solid #ddd;
+    }
+    th, td {
+      padding: 10px;
+      text-align: left;
+    }
+    th {
+      background: #f4f4f4;
+    }
+    canvas {
+      max-width: 100%;
+      height: 400px;
+    }
+  </style>
+</head>
+<body class="content-area">
+  <%- include('../admin-panel/component/header') %>
+  <%- include('../admin-panel/component/sidebar') %>
+  <div>
+  <h1 style="margin-bottom: 25px;">Dashboard</h1>
+  <h3 style="margin-bottom: 10px;">Tool Usage Summary</h3>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Tool Name</th>
+        <th>Tool ID</th>
+        <th>Usage Count</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% tools.forEach(tool => { %>
+        <tr>
+          <td><%= tool.name %></td>
+          <td><%= tool.id %></td>
+          <td><%= tool.usageCount || 0 %></td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+
+  <h3>Tool Usage Chart</h3>
+  <canvas id="usageChart"></canvas>
+
+  <!-- Embedding the data in a hidden div -->
+  <div id="chartData" data-tool-names="<%= JSON.stringify(tools.map(t => t.name)) %>"
+       data-usage-counts="<%= JSON.stringify(tools.map(t => t.usageCount || 0)) %>" style="display: none;">
+  </div>
+</div>
+
+  <script>
+    // Extract the data from the hidden div
+    const chartDataDiv = document.getElementById('chartData');
+    const toolNames = JSON.parse(chartDataDiv.getAttribute('data-tool-names'));
+    const usageCounts = JSON.parse(chartDataDiv.getAttribute('data-usage-counts'));
+
+    // Render the chart
+    const ctx = document.getElementById('usageChart').getContext('2d');
+    const usageChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: toolNames, // X-axis labels (tool names)
+        datasets: [{
+          label: 'Usage Count', // Data label
+          data: usageCounts, // Y-axis values (usage counts)
+          backgroundColor: 'rgba(54, 162, 235, 0.7)', // Color of the bars
+          borderColor: 'rgba(54, 162, 235, 1)', // Border color of the bars
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { display: false }, // Disable legend
+          tooltip: { enabled: true } // Enable tooltips
+        },
+        scales: {
+          y: {
+            beginAtZero: true, // Start the Y-axis from 0
+            ticks: {
+              stepSize: 1 // Set the step size for Y-axis ticks
+            }
+          }
+        }
+      }
+    });
+  </script>
+
+</body>
+</html>

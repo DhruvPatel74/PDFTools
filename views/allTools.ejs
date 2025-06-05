@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Tools</title>
+    <link rel="stylesheet" href="/assets/css/AllTools.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <%- include("./components/header") %>
+
+    <section class="tools">
+        <div class="container">
+            <div class="header text-center mb-4">
+                <h1>All PDF Tools</h1>
+                <p>Your one-stop solution for all PDF-related tasks. Convert, edit, compress, secure, and more!</p>
+            </div>
+
+            <!-- Search Bar -->
+            <div class="mb-4 text-center">
+                <input type="text" id="searchBar" class="form-control w-50 mx-auto" placeholder="Search Tools" onkeyup="filterTools()">
+            </div>
+
+            <% if (alltools && alltools.length > 0) { %>
+            <div class="row gy-4" id="toolsContainer">
+                <% alltools.forEach(tool => {
+                    const toolId = tool.id.toLowerCase().replace(/\s+/g, '');
+                %>
+                    <div class="col-md-3 col-sm-6 tool-item" data-id="<%= toolId %>">
+                        <a href="<%= tool.link %>" 
+                           class="card tool-card h-100 text-center text-decoration-none record-click" 
+                           data-id="<%= toolId %>">
+                            <% if (tool.icon.includes('fa-')) { %>
+                                <% const iconPrefix = tool.icon.startsWith('fa-') && (tool.icon.includes('html5') || tool.icon.includes('google') || tool.icon.includes('facebook')) ? 'fab' : 'fas'; %>
+                                <i class="<%= iconPrefix %> <%= tool.icon %> fa-4x <%= tool.color %>"></i>
+                            <% } else { %>
+                                <i class="fas fa-question fa-4x <%= tool.color %>"></i>
+                            <% } %>                            
+                            <div class="card-body">
+                                <h5 class="card-title"><%= tool.name %></h5>
+                                <p class="card-text"><%= tool.description %></p>
+                            </div>
+                        </a>
+                    </div>
+                <% }); %>
+            </div>
+            <% } else { %>
+                <p class="text-center">No tools available at the moment.</p>
+            <% } %>
+
+        </div>
+    </section>
+
+    <%- include("./components/footer.ejs") %>
+
+    <script>
+        function filterTools() {
+            let input = document.getElementById("searchBar").value.toLowerCase().replace(/\s+/g, '');
+            let tools = document.querySelectorAll(".tool-item");
+
+            tools.forEach(tool => {
+                let toolId = tool.getAttribute("data-id");
+                if (toolId.includes(input)) {
+                    tool.style.display = "block";
+                } else {
+                    tool.style.display = "none";
+                }
+            });
+        }
+
+        // Listen for clicks on all cards
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.record-click').forEach(card => {
+                card.addEventListener('click', function () {
+                    const toolId = this.getAttribute('data-id');
+                    fetch('/api/click', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ toolId })
+                    }).catch(err => console.error('Click not recorded:', err));
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>

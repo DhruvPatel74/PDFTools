@@ -1,0 +1,268 @@
+<div class="upload-section border p-4 rounded">
+    <h4 class="mb-3">Upload Your PDF Files</h4>
+    <form id="<%= tool.formId %>">
+
+        
+        <% if (tool.formId === "images-to-pdf") { %>
+            <div class="mb-3">
+                <label for="<%= tool.fileInputId %>" class="form-label">Upload Images:</label>
+                <input type="file" class="form-control" id="image-upload" accept="image/*" multiple>
+            </div>
+        <% } else if (tool.formId === "word-to-pdf") { %>
+            <div class="mb-3">
+                <label for="<%= tool.fileInputId %>" class="form-label">Upload Word File:</label>
+                <input type="file" class="form-control" id="word-upload" accept=".doc,.docx">
+            </div>
+        <% } else if (tool.formId === "excel-to-pdf") { %>
+            <div class="mb-3">
+                <label for="<%= tool.fileInputId %>" class="form-label">Upload Excel File:</label>
+                <input type="file" class="form-control" id="excel-upload" accept=".xls,.xlsx">
+            </div>
+        <% } else if (tool.formId === "powerpoint-to-pdf") { %>
+            <div class="mb-3">
+                <label for="<%= tool.fileInputId %>" class="form-label">Upload PowerPoint File:</label>
+                <input type="file" class="form-control" id="ppt-upload" accept=".ppt,.pptx">
+            </div>
+        <% } else if (tool.formId === "html-to-pdf") { %>
+            <div class="mb-3">
+                <label for="html-url" class="form-label">Enter HTML File URL:</label>
+                <input type="url" class="form-control" id="html-url" placeholder="Enter the URL of an HTML file" required>
+            </div>
+            
+        <% } else if (tool.formId === "text-to-pdf") { %>
+            <div class="mb-3">
+                <label for="<%= tool.fileInputId %>" class="form-label">Upload Text File:</label>
+                <input type="file" class="form-control" id="text-upload" accept=".txt">
+            </div>
+        <% } else if (tool.formId === "pdf-redaction") { %>
+                <form id="redact-pdf-form">
+                    <div class="mb-3">
+                        <label for="redact-pdf-file" class="form-label">Select PDF File:</label>
+                        <input type="file" class="form-control" id="redact-pdf-file" accept="application/pdf">
+                    </div>
+            
+                    <div id="preview-section" class="d-none mb-3">
+                        <h5>Preview</h5>
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <button id="prev-page" class="btn btn-sm btn-secondary">Previous</button>
+                            <span id="page-info" class="text-muted">Page 1 of 1</span>
+                            <button id="next-page" class="btn btn-sm btn-secondary">Next</button>
+                        </div>
+                        <div class="border p-2 mb-2" style="overflow: auto; max-height: 500px;">
+                            <canvas id="redaction-preview"></canvas>
+                        </div>
+                        <p class="text-muted small">Click on the document to add redaction boxes</p>
+                        <button id="clear-redactions" type="button" class="btn btn-sm btn-danger">Clear All Redactions</button>
+                    </div>
+            
+                    <div id="alert-container"></div>
+                </form>
+        <% } else { %>
+            <div class="mb-3">
+                <label for="<%= tool.fileInputId %>" class="form-label">Select PDF Files:</label>
+                <input type="file" class="form-control" id="<%= tool.fileInputId %>" accept="application/pdf" multiple>
+            </div>
+        <% } %>
+        
+        <!-- Page Range Input Section (Conditional) -->
+        <% if (tool.pageRangeRequired) { %>
+            <div class="mb-3">
+                <label for="<%= tool.pageRangeId %>" class="form-label">Enter Page Range:</label>
+                <input type="text" class="form-control" id="<%= tool.pageRangeId %>"
+                    placeholder="<%= tool.pageRangePlaceholder %>">
+            </div>
+        <% } %> 
+        <% if (tool.rotationRequired) { %>
+            <div class="mb-3">
+                <label for="rotate-pdf-rotation" class="form-label">Enter Rotation Angle (90, 180, 270):</label>
+                <input type="number" id="rotation-angle" class="form-control" placeholder="Enter rotation angle (90, 180, 270)">
+            </div>
+        <% } %>
+              
+        <% if (tool.pdfPasswordLockRequired) { %>
+            <div class="mb-3">
+                <label for="password" class="form-label">Enter Password:</label>
+                <input type="password" class="form-control" id="<%= tool.passwordInput  %>" placeholder="Enter Password">
+            </div>
+            <div class="mb-3">
+                <label for="confirm-password" class="form-label">Confirm Password:</label>
+                <input type="password" class="form-control" id="<%= tool.confirmPasswordInput %>" placeholder="Confirm Password">
+            </div>
+        <% } %>
+
+        <% if (tool.pdfPasswordUnlockRequired) { %>
+            <div class="mb-3">
+                <label for="password" class="form-label">Enter Password:</label>
+                <input type="password" class="form-control" id="password" placeholder="Enter Password">
+            </div>
+        <% } %>
+
+        <% if (tool.signatureRequired) { %>
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div id="signature-section">
+                            <h4>Create Signature</h4>
+                            <canvas id="signature-pad" width="300" height="200" style="border:1px solid #000;"></canvas>
+                            <button id="clear-signature" class="btn btn-secondary mt-2">Clear Signature</button>
+                        </div>
+                        
+                        <select id="page-selection" class="form-control mt-3" style="display:none;">
+                            <option value="">Select a page...</option>
+                        </select>
+                    </div>
+                    
+                    <div class="col-md-8">
+                        <div id="page-preview-container" style="max-height: 600px; overflow-y: auto;">
+                            <!-- Page previews will be inserted here -->
+                        </div>
+                        </div>
+                </div>
+                
+                <div id="result-section" class="mt-3" style="display:none;">
+                    <a id="download-link" href="#" class="btn btn-success">Download Signed PDF</a>
+                </div>
+            </div>
+            
+            <div id="loading-overlay" class="d-none" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); display:flex; justify-content:center; align-items:center; z-index:1000;">
+                <div class="spinner-border text-light" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+            </div>
+        <% } %>
+
+        <% if (tool.watermarkRequired) { %>
+            <div class="mb-3">
+                <label for="watermarkText" class="form-label">Enter Watermark Text:</label>
+                <input type="text" class="form-control" id="watermarkText" name="watermarkText" placeholder="Enter Watermark Text" required>
+            </div>
+        <% } %>
+
+        <% if (tool.redactRequired) { %>
+                       
+        <% } %>
+
+        <% if (tool.pageNumberPositionRequired) { %>
+            <div class="mb-3">
+                <label for="page-number-position" class="form-label">Select Page Number Position:</label>
+                <select class="form-select" id="page-number-position">
+                    <option value="top-left">Top Left</option>
+                    <option value="top-center">Top Center</option>
+                    <option value="top-right">Top Right</option>
+                    <option value="bottom-left">Bottom Left</option>
+                    <option value="bottom-center" selected>Bottom Center</option>
+                    <option value="bottom-right">Bottom Right</option>
+                </select>
+            </div>
+        <% } %>
+        
+        <div id="alert-container"></div>
+
+
+        <!-- Submit Button Section -->
+        <div class="text-center">
+            <button type="button" id="<%= tool.buttonId %>" class="toolbutton btn btn-primary">
+                <%= tool.buttonText %>
+            </button>
+        </div>
+
+        <!-- Loading Animation -->
+        <div id="loading-overlay" class="loading-overlay d-none">
+            <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script>
+            <dotlottie-player src="https://lottie.host/5e148a92-348a-4556-ac0f-3140fcea95a9/PrCfSLU7DJ.lottie" background="transparent" speed="1" 
+                              style="width: 300px; height: 300px" loop autoplay></dotlottie-player>
+            <p class="mt-3">Your file is being processed. Please wait while we prepare the download link...</p>
+        </div>    
+
+    </form>
+</div>
+
+<div id="organize-section" class="d-none text-center border p-4 rounded mt-3 mb-5">
+<div id="organize-container" class="d-flex flex-wrap"></div> 
+    <a id="organize-btn" class="btn btn-success mt-3" Organize>Organize PDF</a>
+</div>
+
+<div id="pdf-viewer-section" class="d-none text-center border p-4 rounded mt-3 mb-5">
+    <h4>Select Areas to Redact</h4>
+    <div id="pdf-pages-container" class="d-flex flex-wrap justify-content-center"></div>
+    <button id="apply-redaction" class="btn btn-danger mt-3">Redact Selected Areas</button>
+</div>
+
+<div id="result-section" class="d-none text-center border p-4 rounded mt-3 mb-5">
+    <h4>Download Your Merged PDF</h4>
+<div id="image-container" class="d-flex flex-nowrap"></div>
+    <a id="download-link" class="btn btn-success mt-3" download>Download PDF</a>
+</div>
+
+<style>
+    .loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;  
+      flex-direction: column;
+      color: rgb(255, 255, 255);
+      font-size: 1.2rem;
+      z-index: 1000;
+    }
+    .loading-overlay p{
+        position: absolute;
+        top: 52%;
+    }
+    #image-container {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto; /* Enables horizontal scrolling */
+    white-space: wrap; /* Prevents wrapping */
+    padding: 10px;
+    max-width: 100%; /* Ensures it fits within the container */
+    /* margin: 0% 3%; Centers the images */
+    align-items: center;
+    justify-content: center;
+}
+#organize-container {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto; /* Enables horizontal scrolling */
+    white-space: wrap; /* Prevents wrapping */
+    padding: 10px;
+    max-width: 100%; /* Ensures it fits within the container */
+    /* margin: 0% 3%; Centers the images */
+    align-items: center;
+    justify-content: center;
+}
+.image-wrapper {
+    position: relative; /* Ensures buttons are positioned relative to this wrapper */
+    display: inline-block; /* Keeps images in a row */
+    text-align: center; /* Centers the buttons under the image */
+    margin: 10px;
+    margin-right: 30px;
+    margin-left: 30px;
+}
+
+.image-wrapper img {
+    display: block;
+    max-width: 200px; 
+    transition: transform 0.3s ease-in-out;
+    transform-origin: center center; /* Ensures rotation happens from the center */
+}
+
+.image-wrapper .button-container {
+    position: absolute;
+    bottom: -50px; /* Ensures buttons are always below the image */
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column; /* Stack buttons vertically */
+    gap: 5px; /* Adds spacing between buttons */
+}
+
+
+  </style>
+
+
